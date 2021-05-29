@@ -31,7 +31,7 @@ test:
 	go test
 
 proto:
-	protoc -I ../blowpipe/grpc blowpiperpc.proto --go_out=plugins=grpc:blowpiperpc
+	protoc -I grpc blowpiperpc.proto --go_out=plugins=grpc:blowpiperpc
 
 build:
 	go build

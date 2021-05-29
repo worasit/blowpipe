@@ -1,0 +1,310 @@
+syntax = "proto3";
+
+package blowpiperpc;
+
+option go_package = "/";
+
+message User {
+    string id = 1;
+    string username = 2;
+}
+
+message Context {
+    string id               = 1;
+    string name             = 2;
+    string description      = 3;
+}
+
+message ListContextsRequest {
+    string regex            = 1;
+}
+message ListUsersRequest {
+    string regex            = 1;
+}
+message AddContextRequest {
+    string name             = 1;
+    string description      = 2;
+}
+message AddContextResponse {
+    bool success            = 1;
+    string name             = 2;
+}
+message DeleteContextRequest {
+    string id               = 1;
+}
+message DeleteContextResponse {
+    bool success            = 1;
+}
+
+message DeleteWorkflowRequest {
+    string id               = 1;
+    bool permanently_delete = 2;
+}
+
+message DeleteWorkflowResponse {
+    string id               = 1;
+    bool success            = 2;
+}
+
+message AddWorkflowResponse {
+    string id               = 1;
+    bool success            = 2;
+}
+
+message ListWorkflowsRequest {
+    bool include_deleted    = 1;
+}
+
+message UpdateWorkflowRequest {
+    string id               = 1;
+    string yaml             = 2;
+    string reason           = 3;
+}
+
+
+message StatusResponse {
+    string message = 1;
+}
+
+message PauseRequest {
+    string id               = 1;
+}
+message PauseResponse {
+    string id               = 1;
+    string message          = 2;
+    bool success            = 3;
+}
+
+message ResumeRequest {
+    string id               = 1;
+}
+message ResumeResponse {
+    string id               = 1;
+    string message          = 2;
+    bool success            = 3;
+}
+
+message CancelRequest {
+    string id               = 1;
+}
+message CancelResponse {
+    string id               = 1;
+    string message          = 2;
+    bool success            = 3;
+}
+
+message SetWorkflowEnabledRequest {
+    string id               = 1;
+    bool enabled            = 2;
+}
+
+message SetWorkflowEnabledResponse {
+    string id               = 1;
+    string message          = 2;
+    bool success            = 3;
+}
+
+message UpdateWorkflowResponse {
+    string id               = 1;
+    bool success            = 2;
+}
+
+message Timestamp {
+    int32 value             = 1;
+}
+
+message ID {
+    string id               = 1;
+}
+
+message GetWorkflowRequest {
+    string id               = 1;
+    int32 version           = 2;
+}
+
+message GetWorkflowResponse {
+    bool success            = 1;
+    string message          = 2;
+    Workflow workflow       = 3;
+}
+
+message GetConfigRequest {
+    string key              = 1;
+}
+
+message DeleteConfigRequest {
+    string key              = 1;
+}
+
+message DeleteConfigResponse {
+    bool success            = 1;
+    string key              = 2;
+    string message          = 3;
+}
+
+message GetLogRequest {
+    int32 time              = 1;
+    string log_level        = 2;
+    string log_source       = 3;
+    string grep             = 4;      // what to look for
+    string grepv            = 5;      // what to exclude
+    bool tail               = 6;      // if tail, continually stream
+    string run_id           = 7;      // lines for run_id
+    string workflow_id      = 9;      // lines for workflow_id
+    string date_from        = 10;     // lines from this date/time yyyy-mm-dd hh:mm:ss
+    string date_to          = 11;     // lines up to this date/time yyyy-mm-dd hh:mm:ss
+    string username         = 12;     // the author of the logs
+}
+
+message GetLogResponse {
+    string log_message      = 1;
+}
+
+message GetConfigResponse {
+    string key              = 1;
+    string value            = 2;
+    bool success            = 3;
+}
+
+message SetConfigRequest {
+    string key = 1;
+    string value = 2;
+}
+
+message SetConfigResponse {
+    string key              = 1;
+    bool success            = 2;
+}
+
+message Workflow {
+    string id               = 1;
+    string yaml             = 2;
+    bool is_deleted         = 3;
+    bool is_enabled         = 4;
+    string created          = 5;
+    string last_modified    = 6;
+    int32 version           = 7;
+}
+
+message WorkflowHistory {
+    string id = 1;
+    string date = 2;
+    int32 version = 3;
+    string reason = 4;
+    string yaml = 5;
+}
+
+message RunningWorkflow {
+    string id = 1;
+    string state = 2;
+    string created = 3;
+    string last_modified = 4;
+    Workflow workflow = 5;
+}
+
+message ListRunningWorkflowsRequest {
+    bool include_completed = 1;
+    string since = 2;
+}
+
+message GetRunningWorkflowRequest {
+    string id = 1;
+}
+message GetRunningWorkflowResponse {
+    bool success                     = 1;
+    RunningWorkflow running_workflow = 2;
+    string message                   = 3;
+}
+
+message ManualTriggerRequest {
+    string id = 1;
+}
+
+message ManualTriggerResponse {
+    bool success            = 1;            // true/false for triggering
+    string workflow_id      = 2;            // workflow being triggered
+    string run_id           = 3;            // id of the running_workflow entry
+    string message          = 4;            // any relevant message (useful if it fails)
+}
+
+message AddUserRequest {
+    User user = 1;
+}
+
+message AddUserResponse {
+    bool success            = 1;
+    string id               = 2;
+    string message          = 3;
+}
+
+message DeleteUserRequest {
+    User user = 1;
+}
+
+message DeleteUserResponse {
+    bool success            = 1;
+    string message          = 2;
+}
+
+message UpdateUserRequest {
+    User user = 1;
+}
+
+message UpdateUserResponse {
+    bool success            = 1;
+    string message          = 2;
+}
+
+service Blowpipe {
+
+    // returns a stream of Entities that have
+    // been created or modified since a timestamp. -1 means all Entities
+
+    rpc ListContexts(ListContextsRequest) returns (stream Context) {}
+    rpc AddContext(AddContextRequest) returns (stream AddContextResponse) {}
+    rpc DeleteContext(DeleteContextRequest) returns (stream DeleteContextResponse) {}
+
+    rpc ListUsers(ListUsersRequest) returns (stream User) {}
+    rpc AddUser(AddUserRequest) returns (stream AddUserResponse) {}
+    rpc UpdateUser(UpdateUserRequest) returns (stream UpdateUserResponse) {}
+    rpc DeleteUser(DeleteUserRequest) returns (stream DeleteUserResponse) {}
+
+    rpc ListWorkflows(ListWorkflowsRequest) returns (stream Workflow) {}
+    rpc ListWorkflowHistory(ID) returns (stream WorkflowHistory) {}
+    rpc GetWorkflow(GetWorkflowRequest) returns (GetWorkflowResponse) { }
+    rpc AddWorkflow(Workflow) returns (AddWorkflowResponse) {}
+    rpc UpdateWorkflow(UpdateWorkflowRequest) returns (UpdateWorkflowResponse) {}
+    rpc DeleteWorkflow(DeleteWorkflowRequest) returns (DeleteWorkflowResponse) {}
+
+    // https://github.com/grpc-ecosystem/grpc-gateway
+    rpc Status(Timestamp) returns (StatusResponse) {}
+    
+    /*
+    rpc Status(Timestamp) returns (StatusResponse) {
+            option (google.api.http) = {
+                post: "/v1/status"
+                body: "*"
+            };
+    }
+    */
+
+    rpc SetWorkflowEnabled(SetWorkflowEnabledRequest) returns (SetWorkflowEnabledResponse) {}
+
+    rpc Pause(PauseRequest) returns (PauseResponse) {}
+    rpc Resume(ResumeRequest) returns (ResumeResponse) {}
+    rpc Cancel(CancelRequest) returns (CancelResponse) {}
+
+    rpc GetAllConfig(Timestamp) returns (stream GetConfigResponse) {}
+    rpc GetConfig(GetConfigRequest) returns (GetConfigResponse) {}
+    rpc SetConfig(SetConfigRequest) returns (SetConfigResponse) {}
+    rpc DeleteConfig(DeleteConfigRequest) returns (DeleteConfigResponse) {}
+
+    rpc GetLog(GetLogRequest) returns (stream GetLogResponse) {}
+
+    rpc ManualTrigger(ManualTriggerRequest) returns (ManualTriggerResponse) {}
+
+    // returns only currently running Workflows
+    rpc ListRunningWorkflows(ListRunningWorkflowsRequest) returns (stream RunningWorkflow) {}
+    rpc GetRunningWorkflow(GetRunningWorkflowRequest) returns (GetRunningWorkflowResponse) {}
+
+}
