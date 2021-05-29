@@ -7,8 +7,8 @@ import (
 	"log"
 	"time"
 
-	pb "blowpipe.xyz/blowpipe/blowpiperpc"
-	"blowpipe.xyz/blowpipe/constants"
+	pb "github.com/getblowpipe/blowpipe/blowpiperpc"
+	"github.com/getblowpipe/blowpipe/constants"
 	"google.golang.org/grpc"
 )
 
