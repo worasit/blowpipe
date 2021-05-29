@@ -31,7 +31,7 @@ test:
 	go test
 
 proto:
-	protoc -I ../../grpc blowpiperpc.proto --go_out=plugins=grpc:blowpiperpc
+	protoc -I ../blowpipe/grpc blowpiperpc.proto --go_out=plugins=grpc:blowpiperpc
 
 build:
 	go build
@@ -40,4 +40,4 @@ all: proto clean test build
 	go fmt
 
 install: build
-	cd blowpipe && go install
+	go install
