@@ -4,7 +4,7 @@ I am the go client implementation of [blowpipe.xyz](https://blowpipe.xyz).  Well
 
 ## Installation
 
-To install directly via `go get..`, Ensure \$GOPATH and \$GOBIN are setup correctly, then:
+To install directly via `go get..`, Ensure `$GOPATH` and `$GOBIN` are setup correctly, then
 
 ```bash
 go get github.com/getblowpipe/blowpipe
@@ -14,9 +14,11 @@ go get github.com/getblowpipe/blowpipe
 
 Alternatively you can build from source
 
-    git@github.com:getblowpipe/blowpipe.git blowpipe-go
-    cd blowpipe-go
-    make build
+```bash
+git@github.com:getblowpipe/blowpipe.git blowpipe-go
+cd blowpipe-go
+make build
+```
 
 ## Protobuf
 

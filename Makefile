@@ -36,7 +36,7 @@ proto:
 build:
 	go build
 
-all: proto clean test build
+all: setup proto clean test build
 	go fmt
 
 install: build
