@@ -13,11 +13,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-// const (
-// 	address     = "localhost:41415"
-// 	defaultName = "world"
-// )
-
 // App is the entrypoint to the whole ballgame
 type App struct {
 	Client        pb.BlowpipeClient
