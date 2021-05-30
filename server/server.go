@@ -23,7 +23,7 @@ func (server Server) Status() string {
 }
 
 func (server Server) Connect() bool {
-	conn, err := grpc.Dial(*serverAddress)
+	conn, _ := grpc.Dial(*serverAddress)
 	server.Connection = conn
 	defer conn.close()
 	return true
